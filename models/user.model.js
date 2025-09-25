@@ -31,11 +31,20 @@ const userSchema=new mongoose.Schema({
         type:String,
         default:"https://cdn-icons-png.flaticon.com/512/149/149071.png"
     },
+    about:{
+        type:String,
+        default:"Hello, I am a developer",
+    },
     skills:{
         type:[String],
     },
     projects:{
         type:[String]
+
+    },
+    profileCompleteNess:{
+        type:Boolean,
+        default:false
     }
 
 },{timestamps:true});
