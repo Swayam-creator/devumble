@@ -1,13 +1,19 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+// import { trim } from "validator";
+import dotenv from 'dotenv';
+dotenv.config();
 const userSchema=new mongoose.Schema({
     firstName:{
         type:String,
         required:true,
-        minlength:3
+        minlength:3,
+        trim:true,
     },
     lastName:{
         type:String,
         required:true,
+        trim:true
     },
     emailId:{
         type:String,
@@ -48,5 +54,19 @@ const userSchema=new mongoose.Schema({
     }
 
 },{timestamps:true});
+
+userSchema.methods.comparePassword=async function(inputPassword){
+    return await bcrypt.compare(inputPassword,this.password);
+}
+
+userSchema.pre('save',async function(next){
+    if(this.isModified("password")){
+        // console.log(process.env.hashRound)
+        const saltRound=await bcrypt.genSalt(Number(process.env.hashRound));
+    this.password=await bcrypt.hash(this.password,saltRound);
+    }
+    next();
+});
+
 const User=mongoose.model("User",userSchema);
 export default User;
