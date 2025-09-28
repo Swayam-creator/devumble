@@ -11,7 +11,7 @@ dotenv.config({debug:true})
 const PORT=process.env.PORT || 3000;
 connectDB().then(()=>{
     app.listen(PORT,()=>{
-    console.log(`Server started on ${PORT}`);})
+    console.log(`Server started on ${PORT}`);});
 }).catch((err)=>{
     console.log(`Unable to start the server`);
 })
