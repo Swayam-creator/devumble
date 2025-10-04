@@ -3,8 +3,7 @@
   - POST -> /Signup
   - POST -> /Signin
   - POST -> /Logout
-
-- `PROFILE`
+- `Profile` 
   - GET ->/profile/view
   - PATCH ->/profile/edit
   - PATCH ->/profile/password

@@ -1,6 +1,7 @@
 import validator from 'validator';
 import {ApiError} from './ApiError.js'
-import { STRONG_PASSWORD_OPTIONS } from '../constant.js';
+import { ApiResponse } from './ApiResponse.js';
+import { STRONG_PASSWORD_OPTIONS ,ALLOWED_UPDATES} from '../constant.js';
 const singupValidator=(req,res,next)=>{
     const {firstName,lastName,emailId,password} = req.body;
     //  required fields 
@@ -31,5 +32,23 @@ const loginValidator=(req,res,next)=>{
     }
     next(); 
 }
+const updateValidator=(req,res,next)=>{
+    const data=req.body;
+    try {
+        let isValiddata=Object.keys(data).every((k)=>ALLOWED_UPDATES.includes(k));
+        if(!isValiddata){
+           return res.status(400).json(new ApiResponse(400,data,"Invalid user data"));
+        }
+        if(data.skills.length>10){
+            throw new ApiError(400,"You can't add skills more than 10");
+        }
+        if(data.projects.length>5){
+            throw new ApiError(400,"You can't add projects more than 5");
+        }
+    } catch (error) {
+        throw new ApiError(error.code,error.message);
+    }
+    next();
+}
 
-export {singupValidator,loginValidator};
+export {singupValidator,loginValidator,updateValidator};

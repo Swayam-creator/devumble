@@ -7,4 +7,10 @@ minUppercase:0,
 minNumbers:0,
 minSymbols:0
 };
-export {ALLOWED_UPDATES,STRONG_PASSWORD_OPTIONS};
+const JWT_OPTIONS={
+    expiresIn:'1h'
+}
+const COOKIE_OPTIONS={
+    maxAge:24*60*60*1000
+}
+export {ALLOWED_UPDATES,STRONG_PASSWORD_OPTIONS,JWT_OPTIONS,COOKIE_OPTIONS};

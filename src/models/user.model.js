@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 // import { trim } from "validator";
 import dotenv from 'dotenv';
+import { JWT_OPTIONS } from "../constant.js";
+import jwt from 'jsonwebtoken';
 dotenv.config();
 const userSchema=new mongoose.Schema({
     firstName:{
@@ -57,6 +59,14 @@ const userSchema=new mongoose.Schema({
 
 userSchema.methods.comparePassword=async function(inputPassword){
     return await bcrypt.compare(inputPassword,this.password);
+}
+
+userSchema.methods.getJWT=async function(){
+    return await jwt.sign({_id:this._id,
+     emailId:this.emailId,
+     firstName:this.firstName,
+     lastName:this.lastName,
+ },process.env.secretkey,JWT_OPTIONS);
 }
 
 userSchema.pre('save',async function(next){
