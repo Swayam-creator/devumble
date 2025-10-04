@@ -16,7 +16,6 @@ app.use('/api/v1/auth',authRouter);
 app.use('/api/v1/profile',profileRouter);
 connectDB().then(()=>{
     app.listen(PORT,()=>{
-    // console.log(`Server started on ${PORT}`);
     logger.info(`Server started on ${PORT}`)
 });
 }).catch((err)=>{

@@ -44,3 +44,13 @@ const {emailId,password}=req.body;
   throw new ApiError(error.code,error.message);  
  }
 }
+
+export const LogoutController=async(req,res)=>{
+    try {
+        return res.status(200).clearCookie("token").json(new ApiResponse(200,"",
+        "logout successfull"
+        ));
+    } catch (error) {
+        throw new ApiError(error.code,error.message);
+    }
+}
