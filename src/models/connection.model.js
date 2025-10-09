@@ -18,15 +18,15 @@ status:{
 }
 });
 
-connectionRequestSchema.methods=asyncHandler(async(userId)=>{
+connectionRequestSchema.methods.isSenderandUserSame=asyncHandler(async(userId)=>{
     try {
         if(req.user?._id===userId){
             throw new ApiError(400,"'you can't send connection request to yourself'");
         }
+        return res.status(200).json(new ApiResponse(200,connection,'Connection request sent successfully'));
     } catch (error) {
         throw new ApiError(error.code,error.message);
     }
-    next();
 });
 
 const ConnectionRequest = mongoose.model('ConnectionRequest',connectionRequestSchema);

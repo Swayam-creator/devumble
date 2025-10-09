@@ -16,6 +16,8 @@ export const connectionRequestController=asyncHandler(async(req,res)=>{
         ]
      });
      if(doubleRequest)  throw new ApiError(400,"Multiple request not allowed");
+      const val=ConnectionRequest.isSenderandUserSame(userId);
+    
      
      // now that all checks are passed we can create our connection
 
