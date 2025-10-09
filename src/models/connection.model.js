@@ -18,16 +18,16 @@ status:{
 }
 });
 
-connectionRequestSchema.methods.isSenderandUserSame=asyncHandler(async(userId)=>{
+connectionRequestSchema.methods.isSenderandUserSame=async function (userId) {
     try {
-        if(req.user?._id===userId){
-            throw new ApiError(400,"'you can't send connection request to yourself'");
+        if (this._id.toString() === userId.toString()) {
+            throw new ApiError(400, "You can't send a connection request to yourself");
         }
-        return res.status(200).json(new ApiResponse(200,connection,'Connection request sent successfully'));
+        return true; 
     } catch (error) {
-        throw new ApiError(error.code,error.message);
+        throw new ApiError(error.code || 500, error.message || 'Internal server error');
     }
-});
+};
 
 const ConnectionRequest = mongoose.model('ConnectionRequest',connectionRequestSchema);
 export default ConnectionRequest;

@@ -4,6 +4,7 @@ import connectDB from './config/config.db.js';
 import cookieParser from 'cookie-parser';
 import authRouter from './routers/auth.router.js'
 import profileRouter from './routers/profile.router.js'
+import connectionRouter from './routers/connection.router.js'
 import logger from './logger.js';
 
 const app=express();
@@ -14,6 +15,7 @@ app.use(express.json({limit:"16mb"}));
 app.use(express.urlencoded({extended:true,limit:"16mb"}));
 app.use('/api/v1/auth',authRouter);
 app.use('/api/v1/profile',profileRouter);
+app.use('/api/v1/request',connectionRouter);
 connectDB().then(()=>{
     app.listen(PORT,()=>{
     logger.info(`Server started on ${PORT}`)

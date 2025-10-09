@@ -27,7 +27,8 @@
 
   
 
-
+- `Postman Collections`
+  [Click here](https://dexterous-devs.postman.co/workspace/Devumble~ff5f8cf5-9589-4a79-b308-b2112b29b158/collection/31772699-e52a7d22-a3e4-4870-bc73-5491ffa91322?action=share&creator=31772699)
 
 - `STATUS` -> `ignored`,`interested`,`accepted`,`rejected`
 
