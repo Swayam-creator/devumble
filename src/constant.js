@@ -1,4 +1,5 @@
 const ALLOWED_UPDATES=["userId","age","gender","profileImage","about","skills","projects"];
+const ALLOWED_STATUS=['accepted','ignored','collab','notcollab']
 const STRONG_PASSWORD_OPTIONS={
 minLength:8,
 maxLength:20,
@@ -13,4 +14,4 @@ const JWT_OPTIONS={
 const COOKIE_OPTIONS={
     maxAge:24*60*60*1000
 }
-export {ALLOWED_UPDATES,STRONG_PASSWORD_OPTIONS,JWT_OPTIONS,COOKIE_OPTIONS};
+export {ALLOWED_UPDATES,STRONG_PASSWORD_OPTIONS,JWT_OPTIONS,COOKIE_OPTIONS,ALLOWED_STATUS};

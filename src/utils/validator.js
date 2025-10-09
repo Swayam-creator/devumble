@@ -1,7 +1,8 @@
 import validator from 'validator';
 import {ApiError} from './ApiError.js'
 import { ApiResponse } from './ApiResponse.js';
-import { STRONG_PASSWORD_OPTIONS ,ALLOWED_UPDATES} from '../constant.js';
+import { STRONG_PASSWORD_OPTIONS ,ALLOWED_UPDATES,ALLOWED_STATUS} from '../constant.js';
+import mongoose from 'mongoose';
 const singupValidator=(req,res,next)=>{
     const {firstName,lastName,emailId,password} = req.body;
     //  required fields 
@@ -51,4 +52,21 @@ const updateValidator=(req,res,next)=>{
     next();
 }
 
-export {singupValidator,loginValidator,updateValidator};
+/// connection validation
+const connectionValidator=(req,res,next)=>{
+const status=req.params.status;
+const validStatus=ALLOWED_STATUS.includes(status);
+if(!validStatus){ throw new ApiError('Invalid status passed');}
+const userId=req.params.userId;
+if(!mongoose.isValidObjectId(userId)){
+    throw new ApiError(400,'Invalid object id');
+}
+next();
+}
+
+
+
+
+
+
+export {singupValidator,loginValidator,updateValidator,connectionValidator};
