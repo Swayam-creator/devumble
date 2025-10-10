@@ -1,7 +1,7 @@
 import validator from 'validator';
 import {ApiError} from './ApiError.js'
 import { ApiResponse } from './ApiResponse.js';
-import { STRONG_PASSWORD_OPTIONS ,ALLOWED_UPDATES,ALLOWED_STATUS} from '../constant.js';
+import { STRONG_PASSWORD_OPTIONS ,ALLOWED_UPDATES, ALLOWED_CONNECTION_REQUEST_STATUS, ALLOWED_CONNECTION_REVIEW_STATUS} from '../constant.js';
 import mongoose from 'mongoose';
 const singupValidator=(req,res,next)=>{
     const {firstName,lastName,emailId,password} = req.body;
@@ -55,7 +55,7 @@ const updateValidator=(req,res,next)=>{
 /// connection validation
 const connectionValidator=(req,res,next)=>{
 const status=req.params.status;
-const validStatus=ALLOWED_STATUS.includes(status);
+const validStatus=ALLOWED_CONNECTION_REQUEST_STATUS.includes(status);
 if(!validStatus){ throw new ApiError('Invalid status passed');}
 const userId=req.params.userId;
 if(!mongoose.isValidObjectId(userId)){
@@ -64,9 +64,19 @@ if(!mongoose.isValidObjectId(userId)){
 next();
 }
 
+const connectionReviewValidator=(req,res,next)=>{
+     const {reviewstatus,requestId}=req.params;
+     const validStatus=ALLOWED_CONNECTION_REVIEW_STATUS.includes(reviewstatus); 
+     if(!validStatus)  return res.status(400).json(new ApiError(400,'Invalid status'));
+     const validRequestId=mongoose.isValidObjectId(requestId);
+     if(!validRequestId) throw new ApiError(400,'Invalid object id');
+
+    next();
+}
 
 
 
 
 
-export {singupValidator,loginValidator,updateValidator,connectionValidator};
+
+export {singupValidator,loginValidator,updateValidator,connectionValidator,connectionReviewValidator};

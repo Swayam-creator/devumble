@@ -32,9 +32,43 @@ export const connectionRequestController = asyncHandler(async (req, res) => {
   await connection.isSenderandUserSame(senderId);
 
   await connection.save();
-
- 
   res
     .status(200)
     .json(new ApiResponse(200, connection, 'Connection request sent successfully'));
+});
+
+
+export const connectionReviewController = asyncHandler(async (req, res, next) => {
+  const { reviewstatus, requestId } = req.params;
+  const recipientId = req.user?._id;
+
+  logger.info(`Requested status change to: ${reviewstatus}`);
+  logger.info(`Request ID: ${requestId}`);
+  logger.info(`Recipient ID: ${recipientId}`);
+
+  if (!reviewstatus || !requestId) {
+    throw new ApiError(400, "Missing reviewstatus or requestId in parameters");
+  }
+
+  const connectionReview = await ConnectionRequest.findOne({
+    _id: requestId,
+    recipientId: recipientId,
+  });
+
+  if (!connectionReview) {
+    logger.error("❌ No connection request found for this user or invalid ID");
+    return res.status(404).json(
+      new ApiResponse(404, null, "Connection request not found or unauthorized")
+    );
+  }
+
+  // Safe to access .status now
+  connectionReview.status = reviewstatus;
+  const updatedConnection = await connectionReview.save();
+
+  logger.info(`✅ Connection status updated to: ${updatedConnection.status}`);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedConnection, "Status updated successfully"));
 });

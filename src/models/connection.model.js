@@ -5,16 +5,15 @@ const connectionRequestSchema=new mongoose.Schema({
 senderId:{
     type:mongoose.Schema.Types.ObjectId,
     ref:'User',
-    unique:true,
+
 },
 recipientId:{
     type:mongoose.Schema.Types.ObjectId,
     ref:'User',
-    unique:true,
 },
 status:{
     type:String,
-    enum:['accepted','ignored','collab','notcollab']
+    enum:['accepted','ignored','collab','nocollab']
 }
 });
 
