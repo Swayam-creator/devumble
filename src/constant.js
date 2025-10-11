@@ -10,7 +10,7 @@ minNumbers:0,
 minSymbols:0
 };
 const JWT_OPTIONS={
-    expiresIn:'1h'
+    expiresIn:'7h'
 }
 const COOKIE_OPTIONS={
     maxAge:24*60*60*1000
