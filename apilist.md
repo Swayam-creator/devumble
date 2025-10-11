@@ -25,6 +25,10 @@
   - POST /request/review/accept/:requestId
   - POST /request/review/reject/:requestId
 
+- `user router`
+  - GET /user/request/recieved
+  - GET /user/connections
+  - GET /user/feed - to display user based on preferences 
   
 
 - `Postman Collections`

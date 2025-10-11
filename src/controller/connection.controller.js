@@ -56,17 +56,17 @@ export const connectionReviewController = asyncHandler(async (req, res, next) =>
   });
 
   if (!connectionReview) {
-    logger.error("❌ No connection request found for this user or invalid ID");
+    logger.error("No connection request found for this user or invalid ID");
     return res.status(404).json(
       new ApiResponse(404, null, "Connection request not found or unauthorized")
     );
   }
 
-  // Safe to access .status now
+
   connectionReview.status = reviewstatus;
   const updatedConnection = await connectionReview.save();
 
-  logger.info(`✅ Connection status updated to: ${updatedConnection.status}`);
+  logger.info(`Connection status updated to: ${updatedConnection.status}`);
 
   return res
     .status(200)
