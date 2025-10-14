@@ -5,7 +5,6 @@ export const isAuthenticated=async(req,res,next)=>{
     try {
         console.log("token "+     req.cookies.token);
         const token=req.cookies?.token;
-        console.log(token);
         if(token)console.log("Token found !! "+token );
         // const verify=jwt.verify(token,process.env.secretkey);
         // if(!verify) return res.status(403).json(new ApiError(403,"Invalid token"));

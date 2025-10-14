@@ -21,6 +21,7 @@ const singupValidator=(req,res,next)=>{
 }
 const loginValidator=(req,res,next)=>{
     const {emailId,password} = req.body;
+    // console.log(emailId);
     //  required fields 
     if(validator.isEmpty(emailId) || validator.isEmpty(password)){
      throw new ApiError(400,"All fields are required");

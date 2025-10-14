@@ -2,32 +2,33 @@ import User from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { COOKIE_OPTIONS } from "../constant.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/AysncHandler.js";
+export const SignupController = asyncHandler(async (req, res) => {
+  const { firstName, lastName, emailId, password } = req.body;
 
-export const SignupController=async(req,res)=>{
-   const {firstName,lastName,emailId,password} = req.body;
-    
-    try {
-        const userExists=await User.findOne({emailId});
-        if(userExists){
-            throw new Error(409,"User already exists");
-        }
-     const user={
-      firstName,
-      lastName,
-      emailId,
-      password
-    }
-    const createdUser=await User.create(user);
-    res.status(201).json(new ApiResponse(200,createdUser,"User created successfully"));
-    } catch (error) {
-    console.log(error);
-         throw new ApiError(error.code,error.message);
-    }
-}
+  const userExists = await User.findOne({ emailId });
+  if (userExists) {
+    throw new ApiError(409, "User already exists");
+  }
 
-export const LoginController=async(req,res)=>{
+  const createdUser = await User.create({
+    firstName,
+    lastName,
+    emailId,
+    password,
+  });
+
+  const signedUser = await User.findById(createdUser._id).select("-password");
+
+  return res
+    .status(201)
+    .json(new ApiResponse(201, signedUser, "User created successfully"));
+});
+
+export const LoginController=asyncHandler(async(req,res)=>{
 const {emailId,password}=req.body;
- try {
+//  console.log(emailId,password)
+ 
     const userExists=await User.findOne({emailId:emailId});
  if(!userExists){
     throw new ApiError(
@@ -39,13 +40,12 @@ const {emailId,password}=req.body;
  if(!passwordMatch) throw new ApiError(400,"Invalid credentials");
  const token=await userExists.getJWT(userExists._id);
  console.log(token)
- return res.status(200).cookie("token",token,COOKIE_OPTIONS).json(new ApiResponse(200,token,"login successful"));
- } catch (error) {
-  throw new ApiError(error.code,error.message);  
+ const user=await User.findById(userExists._id).select("-password");
+ return res.status(200).cookie("token",token,COOKIE_OPTIONS).json(new ApiResponse(200,user,"login successful"));
  }
-}
+);
 
-export const LogoutController=async(req,res)=>{
+export const LogoutController=asyncHandler(async(req,res)=>{
     try {
         return res.status(200).clearCookie("token").json(new ApiResponse(200,"",
         "logout successfull"
@@ -53,4 +53,4 @@ export const LogoutController=async(req,res)=>{
     } catch (error) {
         throw new ApiError(error.code,error.message);
     }
-}
+});
