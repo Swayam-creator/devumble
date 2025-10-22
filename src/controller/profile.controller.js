@@ -23,13 +23,16 @@ export const updateProfileController=async(req,res)=>{
     const userId=req.user?._id;
     console.log(userId);
     const data=req.body;
+    const {firstName,lastName,emailId,profileImage,about,skills,projects} = data;
     try {
         
         const updateUserData=await User.findByIdAndUpdate(
             {_id:userId},
-            {$set:{firstName:firstName} },
-            {new:"true"}).lean();
+            {$set:data },
+            {new:true});
         console.log(updateUserData);
+        
+        
         res.status(200).json(new ApiResponse(200,updateUserData,"User data updated successfully"));
     } catch (error) {
         throw new ApiError(error.code,error.message);

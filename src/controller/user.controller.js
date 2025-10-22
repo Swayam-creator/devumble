@@ -73,16 +73,15 @@ export const getFeedController=asyncHandler(async(req,res)=>{
     requestconnectionsSet.add(req.recipientId.toString());
  });
   logger.info(requestconnectionsSet);
-
+   const excludedUser=Array.from(requestconnectionsSet);
   const UserFeed=await User.find({
     $and:[{
         _id:{$nin:[
-          requestconnectionsSet 
+          ...excludedUser,loggedInUser
         ]},
-        _id:{$ne: loggedInUser._id }
     }
     ]
-  }).select("firstName lastName about skills gender")
+  }).select("firstName lastName about skills gender profileImage emailId")
   .select("-password")
   .skip(page)
   .limit(limit)

@@ -9,29 +9,41 @@ export const connectionRequestController = asyncHandler(async (req, res) => {
   const userId = req.params.userId;
   const senderId = req.user._id;
   const status = req.params.status;
+  logger.info(userId +"," + senderId+"," + status);
+  if(userId.toString()!==senderId.toString()) console.log("different user");
    
-  const userIdExists = await User.findById(userId);
+  const userIdExists = await User.findById(userId).select('-password');
+  logger.info(userIdExists)
   if (!userIdExists) throw new ApiError(404, 'Invalid user ID');
 
   const doubleRequest = await ConnectionRequest.findOne({
     $or: [
       { senderId: senderId, recipientId: userId },
       { senderId: userId, recipientId: senderId },
-    ],
+    ], 
   });
-
-  if (doubleRequest) throw new ApiError(400, 'Multiple requests not allowed');
-
-  
+ logger.info(doubleRequest + " doubleRequest");
+  if (doubleRequest) { 
+     logger.info(doubleRequest);
+    return res.status(400).json( new ApiError(400, 'Multiple requests not allowed'));}
   const connection = new ConnectionRequest({
     senderId,
     recipientId: userId,
     status,
   });
-
-  await connection.isSenderandUserSame(senderId);
-
-  await connection.save();
+  const sameUserCheck=await connection.isSenderandUserSame();
+  if (sameUserCheck){
+ 
+    throw new ApiError(400, "You can't send a connection request to yourself");}
+   
+   try {
+  
+    await connection.save();
+   } catch (error) {
+    throw new ApiError(500, "Failed to save connection: " + error.message);
+   }
+ 
+   logger.info("Connection request sent successfully");
   res
     .status(200)
     .json(new ApiResponse(200, connection, 'Connection request sent successfully'));

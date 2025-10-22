@@ -19,36 +19,40 @@ const singupValidator=(req,res,next)=>{
 
     next();
 }
-const loginValidator=(req,res,next)=>{
-    const {emailId,password} = req.body;
-    // console.log(emailId);
-    //  required fields 
-    if(validator.isEmpty(emailId) || validator.isEmpty(password)){
-     throw new ApiError(400,"All fields are required");
-    }
-    if(!validator.isStrongPassword(password,STRONG_PASSWORD_OPTIONS)){
-       throw new ApiError(400,"Weak password");
-    }
-    if(!validator.isEmail(emailId) || !emailId.endsWith("@gmail.com")){
-        throw new ApiError(400,"Invalid email address");
-    }
-    next(); 
-}
+const loginValidator = (req, res, next) => {
+  const { emailId, password } = req.body;
+
+  if (!emailId || !password) {
+    return next(new ApiError(400, "All fields are required"));
+  }
+
+  if (!validator.isStrongPassword(password, STRONG_PASSWORD_OPTIONS)) {
+    return next(new ApiError(400, "Weak password"));
+  }
+
+  if (!validator.isEmail(emailId) || !emailId.endsWith("@gmail.com")) {
+    return next(new ApiError(400, "Invalid email address"));
+  }
+
+  next();
+};
+
 const updateValidator=(req,res,next)=>{
     const data=req.body;
-    try {
+    try { 
+         
         let isValiddata=Object.keys(data).every((k)=>ALLOWED_UPDATES.includes(k));
         if(!isValiddata){
            return res.status(400).json(new ApiResponse(400,data,"Invalid user data"));
         }
-        if(data.skills.length>10){
-            throw new ApiError(400,"You can't add skills more than 10");
+        if(data?.skills?.length>10){
+           return res.status(400).json( new ApiError(400,"You can't add skills more than 10"));
         }
-        if(data.projects.length>5){
-            throw new ApiError(400,"You can't add projects more than 5");
+        if(data?.projects?.length>5){
+            return res.status(400).json(new ApiError(400,"You can't add projects more than 5"));
         }
     } catch (error) {
-        throw new ApiError(error.code,error.message);
+        return res.status(400).json(new ApiError(error.code,error.message));
     }
     next();
 }
@@ -57,11 +61,8 @@ const updateValidator=(req,res,next)=>{
 const connectionValidator=(req,res,next)=>{
 const status=req.params.status;
 const validStatus=ALLOWED_CONNECTION_REQUEST_STATUS.includes(status);
-if(!validStatus){ throw new ApiError('Invalid status passed');}
-const userId=req.params.userId;
-if(!mongoose.isValidObjectId(userId)){
-    throw new ApiError(400,'Invalid object id');
-}
+if(!validStatus){ throw new ApiError(400,'Invalid status '+status);}
+
 next();
 }
 
@@ -74,10 +75,4 @@ const connectionReviewValidator=(req,res,next)=>{
 
     next();
 }
-
-
-
-
-
-
 export {singupValidator,loginValidator,updateValidator,connectionValidator,connectionReviewValidator};

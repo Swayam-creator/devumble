@@ -1,4 +1,4 @@
-const ALLOWED_UPDATES=["userId","age","gender","profileImage","about","skills","projects"];
+const ALLOWED_UPDATES=["firstName","lastName","age","gender","profileImage","about","skills","projects"];
 const ALLOWED_CONNECTION_REQUEST_STATUS=['collab','nocollab'];
 const ALLOWED_CONNECTION_REVIEW_STATUS=['accepted','ignored'];
 const STRONG_PASSWORD_OPTIONS={

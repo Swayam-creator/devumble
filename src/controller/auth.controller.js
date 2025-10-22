@@ -37,7 +37,7 @@ const {emailId,password}=req.body;
     );
  }
  const passwordMatch=await userExists.comparePassword(password);
- if(!passwordMatch) throw new ApiError(400,"Invalid credentials");
+ if(!passwordMatch) return res.status(400).json(new ApiError(400,"Invalid credentials"));
  const token=await userExists.getJWT(userExists._id);
  console.log(token)
  const user=await User.findById(userExists._id).select("-password");

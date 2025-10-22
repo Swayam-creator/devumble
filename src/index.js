@@ -8,8 +8,9 @@ import connectionRouter from './routers/connection.router.js'
 import userRouter from './routers/user.router.js'
 import logger from './logger.js';
 import cors from 'cors';
+import { errorHandler } from './utils/errorHandler.js';
 const app=express();
-dotenv.config({debug:true})
+dotenv.config({})
 app.use(cors({
   origin:process.env.BASE_URL,
   methods:["GET","POST","PATCH","PUT","DELETE"],
@@ -24,6 +25,7 @@ app.use('/api/v1/auth',authRouter);
 app.use('/api/v1/profile',profileRouter);
 app.use('/api/v1/request',connectionRouter);
 app.use('/api/v1/user',userRouter);
+app.use(errorHandler);
 connectDB().then(()=>{
     app.listen(PORT,()=>{
     logger.info(`Server started on ${PORT}`)
