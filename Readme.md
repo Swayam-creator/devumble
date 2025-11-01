@@ -25,5 +25,7 @@
 
 
 `Deployed link`
- 
- -[coming soon]()   
+  - render link 
+ -[render link](https://devumble-server.onrender.com/)
+ - Aws deployed
+ -  [click]()
