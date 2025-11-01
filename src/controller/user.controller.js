@@ -9,7 +9,7 @@ export const requestRecievedController=asyncHandler(async(req,res)=>{
 
  const requestRecievedData=await ConnectionRequest.findOne({
     recipientId:loggedInUser,
-    status:'accepted'
+    status:'collab'
  }).populate('senderId',"firstName lastName emailId skills projects gender profileImage about");
 
  
@@ -34,8 +34,8 @@ const loggedInUser=req.user?._id;
     ],
     
    })
-   .populate('senderId',"firstName lastName emailId about gender")
-   .populate('recipientId',"firstName lastName emailId about gender");
+   .populate('senderId',"firstName lastName emailId about gender profileImage")
+   .populate('recipientId',"firstName lastName emailId about gender profileImage");
   const connections=connectionsData.map((row)=>{
     if(row.senderId._id.toString()===loggedInUser.toString())  return row.recipientId;
     return row.senderId;

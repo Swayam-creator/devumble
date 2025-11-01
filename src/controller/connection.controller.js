@@ -9,11 +9,10 @@ export const connectionRequestController = asyncHandler(async (req, res) => {
   const userId = req.params.userId;
   const senderId = req.user._id;
   const status = req.params.status;
-  logger.info(userId +"," + senderId+"," + status);
-  if(userId.toString()!==senderId.toString()) console.log("different user");
+  
    
   const userIdExists = await User.findById(userId).select('-password');
-  logger.info(userIdExists)
+ 
   if (!userIdExists) throw new ApiError(404, 'Invalid user ID');
 
   const doubleRequest = await ConnectionRequest.findOne({
@@ -22,7 +21,6 @@ export const connectionRequestController = asyncHandler(async (req, res) => {
       { senderId: userId, recipientId: senderId },
     ], 
   });
- logger.info(doubleRequest + " doubleRequest");
   if (doubleRequest) { 
      logger.info(doubleRequest);
     return res.status(400).json( new ApiError(400, 'Multiple requests not allowed'));}
@@ -43,7 +41,6 @@ export const connectionRequestController = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Failed to save connection: " + error.message);
    }
  
-   logger.info("Connection request sent successfully");
   res
     .status(200)
     .json(new ApiResponse(200, connection, 'Connection request sent successfully'));

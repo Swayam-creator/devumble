@@ -18,7 +18,7 @@ const mailOptions = {
   to: email,
   subject: 'Reset Password',
   text: `Your OTP is ${otp}
-      click on link ${process.env.CLIENT_URL}/otp/verify/${userId}
+      click on link ${process.env.BASE_URL}/otp/verify/${userId}
   `
 };
 

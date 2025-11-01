@@ -35,6 +35,7 @@ connectDB().then(()=>{
 })
 
 app.get('/', (req, res,next) => {
+  res.send('we deployed');
   logger.info({message:'Hi from server!'})
 },
 );
