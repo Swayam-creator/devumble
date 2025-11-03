@@ -9,9 +9,10 @@ export const connectionRequestController = asyncHandler(async (req, res) => {
   const userId = req.params.userId;
   const senderId = req.user._id;
   const status = req.params.status;
-  
+  console.log(userId + " from connection request controller")
    
   const userIdExists = await User.findById(userId).select('-password');
+  console.log(userIdExists);
  
   if (!userIdExists) throw new ApiError(404, 'Invalid user ID');
 
@@ -21,7 +22,9 @@ export const connectionRequestController = asyncHandler(async (req, res) => {
       { senderId: userId, recipientId: senderId },
     ], 
   });
+  console.log(doubleRequest);
   if (doubleRequest) { 
+  
      logger.info(doubleRequest);
     return res.status(400).json( new ApiError(400, 'Multiple requests not allowed'));}
   const connection = new ConnectionRequest({
@@ -30,15 +33,19 @@ export const connectionRequestController = asyncHandler(async (req, res) => {
     status,
   });
   const sameUserCheck=await connection.isSenderandUserSame();
+  console.log(sameUserCheck + 
+    "same user check"
+  );
   if (sameUserCheck){
- 
-    throw new ApiError(400, "You can't send a connection request to yourself");}
+    return res.staus(400).json( new ApiError(400, "You can't send a connection request to yourself"));}
    
    try {
-  
-    await connection.save();
+
+  await connection.save();
+  logger.info('Connection request saved successfully');
    } catch (error) {
-    throw new ApiError(500, "Failed to save connection: " + error.message);
+    console.log(error);
+    return res.status(error.code|| 500).json( new ApiError(500, "Failed to save connection: " + error.message));
    }
  
   res
@@ -46,7 +53,7 @@ export const connectionRequestController = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, connection, 'Connection request sent successfully'));
 });
 
-
+// connection review
 export const connectionReviewController = asyncHandler(async (req, res, next) => {
   const { reviewstatus, requestId } = req.params;
   const recipientId = req.user?._id;

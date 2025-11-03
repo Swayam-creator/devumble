@@ -28,7 +28,6 @@ export const SignupController = asyncHandler(async (req, res) => {
 export const LoginController=asyncHandler(async(req,res)=>{
 const {emailId,password}=req.body;
 //  console.log(emailId,password)
- 
     const userExists=await User.findOne({emailId:emailId});
  if(!userExists){
     throw new ApiError(
