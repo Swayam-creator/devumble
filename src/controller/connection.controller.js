@@ -2,6 +2,7 @@ import { asyncHandler } from '../utils/AysncHandler.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import logger from '../logger.js';
+import {ALLOWED_CONNECTION_REQUEST_STATUS} from "../constant.js"
 import ConnectionRequest from '../models/connection.model.js';
 import User from '../models/user.model.js';
 
@@ -54,7 +55,7 @@ export const connectionRequestController = asyncHandler(async (req, res) => {
 });
 
 // connection review
-export const connectionReviewController = asyncHandler(async (req, res, next) => {
+export const connectionReviewController = asyncHandler(async (req, res) => {
   const { reviewstatus, requestId } = req.params;
   const recipientId = req.user?._id;
 
@@ -65,14 +66,29 @@ export const connectionReviewController = asyncHandler(async (req, res, next) =>
   if (!reviewstatus || !requestId) {
     throw new ApiError(400, "Missing reviewstatus or requestId in parameters");
   }
-
-  const connectionReview = await ConnectionRequest.findOne({
+  let connectionReview;
+  try {
+       connectionReview = await ConnectionRequest.findOne({
     _id: requestId,
     recipientId: recipientId,
+    // status:ALLOWED_CONNECTION_REQUEST_STATUS[0]
   });
+  
+  if (!connectionReview) {
+    logger.error("No connection request found for this user or invalid ID"+ connectionReview);
+    return res.status(404).json(
+      new ApiResponse(404, null, "Connection request not found or unauthorized" + connectionReview)
+    )
+  }
+  } catch (error) {
+    logger.error(error.stack);
+    console.log(error.stack)
+    return res.status(error.code).json(new ApiError(error.code,error.message+"connection"));
+  }
+
 
   if (!connectionReview) {
-    logger.error("No connection request found for this user or invalid ID");
+    logger.error("No connection request found for this user or invalid ID"+ connectionReview);
     return res.status(404).json(
       new ApiResponse(404, null, "Connection request not found or unauthorized")
     );
