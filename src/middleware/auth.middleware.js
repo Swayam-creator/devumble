@@ -11,7 +11,8 @@ export const isAuthenticated=async(req,res,next)=>{
         // if(!verify) return res.status(403).json(new ApiError(403,"Invalid token"));
         const decoded=await jwt.verify(token,process.env.secretkey,COOKIE_OPTIONS);
         console.log("decoded"+decoded)
-        req.user=decoded;
+        req.user=decoded; 
+        
     } catch (error) {
         throw new ApiError(error.code,error.message);
     }

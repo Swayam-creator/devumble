@@ -31,5 +31,20 @@ connectionRequestSchema.methods.isSenderandUserSame = function () {
   }
 };
 
+connectionRequestSchema.statics.ensureIndexSafe=async function(){
+ try {
+  if(process.env.NODE_ENV==="production"){
+    await this.syncIndexes();
+  }
+  else{
+    await this.createIndexes();
+  }
+ } catch (error) {
+  return res.status(error.code||500).json({message:error.message || 
+    'Error in updating indexes'
+  })
+ }
+}
+
 const ConnectionRequest = mongoose.model('ConnectionRequest', connectionRequestSchema);
 export default ConnectionRequest;
