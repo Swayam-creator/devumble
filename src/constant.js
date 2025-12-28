@@ -10,9 +10,16 @@ minNumbers:0,
 minSymbols:0
 };
 const JWT_OPTIONS={
-    expiresIn:'7h'
+    expiresIn:'1d'
 }
-const COOKIE_OPTIONS={
-    maxAge:24*60*60*1000
-}
+const isProduction = process.env.NODE_ENV === "production";
+
+ const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: isProduction,                 
+  sameSite: isProduction ? "none" : "lax",
+  path: "/",
+  maxAge: 24 * 60 * 60 * 1000
+};
+
 export {ALLOWED_UPDATES,STRONG_PASSWORD_OPTIONS,JWT_OPTIONS,COOKIE_OPTIONS,ALLOWED_CONNECTION_REQUEST_STATUS,ALLOWED_CONNECTION_REVIEW_STATUS};

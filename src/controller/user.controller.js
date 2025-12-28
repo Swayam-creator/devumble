@@ -52,6 +52,7 @@ export const getFeedController=asyncHandler(async(req,res)=>{
   // create a set of user who are someway or the other connected to the logged user or had any previous interaction
   // Then fetch the data from User model and ensure that the user is not the logged in user and this set is utilized 
   const loggedInUser=req.user?._id;
+  console.log(loggedInUser)
   let limit=req.query.limit || 10;
   let page=req.query.skip || 1;
   limit=limit>50?50:limit;

@@ -71,7 +71,6 @@ export const connectionReviewController = asyncHandler(async (req, res) => {
        connectionReview = await ConnectionRequest.findOne({
     _id: requestId,
     recipientId: recipientId,
-    // status:ALLOWED_CONNECTION_REQUEST_STATUS[0]
   });
   
   if (!connectionReview) {
