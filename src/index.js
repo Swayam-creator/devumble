@@ -1,8 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/config.db.js';
-import { serve,setup } from 'swagger-ui-express';
-import swaggerSpecDoc from './utils/swagger.js';
 import cookieParser from 'cookie-parser';
 import authRouter from './routers/auth.router.js'
 import profileRouter from './routers/profile.router.js'
@@ -24,7 +22,6 @@ app.use(cors({
   credentials:true,
 }));
 
-app.use('/api-docs',serve,setup(swaggerSpecDoc))
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
